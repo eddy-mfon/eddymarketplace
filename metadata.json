@@ -1,0 +1,9 @@
+
+{
+  "name": "Eddy Templar - Advanced Technical Outerwear",
+  "description": "Premium brutalist technical fashion site featuring video generation, interactive search, and dynamic hero sequences.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
