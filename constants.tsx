@@ -48,6 +48,8 @@ const generateProducts = (count: number, category: Product['category'], prefix: 
     ]
   };
 
+  const brands = ['NIKE', 'ADIDAS', 'ZARA', 'DICKIES', 'UNIQLO', 'TEMPLAR'];
+
   return Array.from({ length: count }).map((_, i) => {
     const id = `${category.toLowerCase()}-${i}`;
     const discountChance = Math.random();
@@ -75,13 +77,24 @@ const generateProducts = (count: number, category: Product['category'], prefix: 
 
     return {
       id,
-      name: `${prefix} ${String.fromCharCode(65 + (i % 26))}${Math.floor(i/26) || ''}`,
+      name: `${prefix} ${String.fromCharCode(65 + (i % 26))}${Math.floor(i / 26) || ''}`,
       type: `${category} SERIES`,
+      brand: brands[i % brands.length],
       price,
       originalPrice,
       image,
+      thumbnails: [
+        `https://images.unsplash.com/photo-${pool[(i + 1) % pool.length]}?q=80&w=200&auto=format&fit=crop`,
+        `https://images.unsplash.com/photo-${pool[(i + 2) % pool.length]}?q=80&w=200&auto=format&fit=crop`,
+        `https://images.unsplash.com/photo-${pool[(i + 3) % pool.length]}?q=80&w=200&auto=format&fit=crop`,
+      ],
       colors: ['ONYX', 'SILVER', 'CHALK'],
+      sizes: ['S', 'M', 'L', 'XL', 'XXL'],
       description: 'Advanced technical fabrication for extreme environments. Features modular attachment points and heat-mapped ventilation.',
+      detailedDescription: 'Engineered for the modern urban warrior, this unit combines high-performance synthetic insulation with a weather-resistant shell. The articulation at the joints ensures full range of motion, while the integrated storage systems allow for seamless tactical deployment.',
+      shippingInfo: 'Global technical courier delivery. Standard deployment time: 3-5 business days. Remote sector access may require additional logistics clearance.',
+      rating: 4 + (Math.random() * 1),
+      reviewsCount: 10 + Math.floor(Math.random() * 90),
       category,
       discountType
     };

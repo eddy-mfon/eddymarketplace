@@ -9,7 +9,7 @@ const Hero: React.FC = () => {
   const [selectedColor, setSelectedColor] = useState(0);
   const [isGeneratingBg, setIsGeneratingBg] = useState(false);
   const [bgVideoUrl, setBgVideoUrl] = useState<string | null>(null);
-  
+
   // 3D Inspector / Zoom State
   const [isZoomed, setIsZoomed] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
@@ -29,7 +29,7 @@ const Hero: React.FC = () => {
     // Reset state
     setBgVideoUrl(null);
     setIsGeneratingBg(true);
-    
+
     try {
       // Check for API key selection before calling Veo
       if (typeof window.aistudio !== 'undefined') {
@@ -85,8 +85,8 @@ const Hero: React.FC = () => {
     setMousePos({ x, y });
 
     // Pseudo-3D Tilt calculation
-    const tiltX = (y - 50) / 4; 
-    const tiltY = -(x - 50) / 4; 
+    const tiltX = (y - 50) / 4;
+    const tiltY = -(x - 50) / 4;
     setTilt({ x: tiltX, y: tiltY });
   };
 
@@ -100,12 +100,12 @@ const Hero: React.FC = () => {
       {/* Background Atmosphere Graphic */}
       <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         {bgVideoUrl ? (
-          <video 
-            src={bgVideoUrl} 
-            autoPlay 
-            loop 
-            muted 
-            className="w-full h-full object-cover opacity-20 grayscale contrast-150 animate-reveal" 
+          <video
+            src={bgVideoUrl}
+            autoPlay
+            loop
+            muted
+            className="w-full h-full object-cover opacity-20 grayscale contrast-150 animate-reveal"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] select-none">
@@ -115,7 +115,7 @@ const Hero: React.FC = () => {
           </div>
         )}
         <div className="absolute inset-0 bg-gradient-to-b from-black via-transparent to-black" />
-        
+
         {isGeneratingBg && (
           <div className="absolute bottom-10 left-10 flex items-center gap-3 glass px-4 py-2 rounded-full border-white/10">
             <div className="w-1.5 h-1.5 bg-white rounded-full animate-ping" />
@@ -125,30 +125,30 @@ const Hero: React.FC = () => {
       </div>
 
       <div className="relative z-10 w-full max-w-7xl grid grid-cols-1 lg:grid-cols-12 gap-8 md:gap-12 items-end">
-        
+
         {/* Info Column: Staggered Cinematic Entrance */}
-        <div 
-          key={`info-${currentIndex}`} 
+        <div
+          key={`info-${currentIndex}`}
           className="lg:col-span-4 order-2 lg:order-1 mb-12 lg:mb-24 opacity-0 translate-y-12 animate-[heroTextEntrance_1s_cubic-bezier(0.16,1,0.3,1)_forwards]"
         >
           <div className="text-[8px] md:text-[10px] tracking-widest opacity-40 mb-6 flex flex-wrap gap-4 uppercase font-black">
             <span className="bg-white/10 px-3 py-1 rounded-sm border border-white/5">[ UNIT: TEMPLAR_0{currentIndex + 1} ]</span>
             <span className="hidden sm:inline glass px-3 py-1 rounded-sm border border-white/5">[ ACTIVE PROTOCOL ]</span>
           </div>
-          <h2 className="text-5xl md:text-7xl lg:text-[100px] font-black font-heading leading-[0.8] tracking-tighter mb-8 md:mb-10 uppercase group cursor-default">
+          <h2 className="text-4xl md:text-7xl lg:text-[100px] font-black font-heading leading-[0.85] md:leading-[0.8] tracking-tighter mb-8 md:mb-10 uppercase group cursor-default">
             {currentProduct.name.split(' ')[0]}<br />
             <span className="text-white/30 group-hover:text-white transition-colors duration-1000">
               {currentProduct.name.split(' ')[1] || 'SERIES'}
             </span>
           </h2>
-          
+
           <div className="flex flex-col gap-10 md:gap-14">
             <div className="flex flex-wrap gap-12 md:gap-16 text-[10px] tracking-[0.2em] font-black">
               <div>
                 <p className="opacity-20 mb-5 uppercase">Scale Configuration</p>
                 <div className="flex gap-8">
                   {['S', 'M', 'L', 'XL'].map(size => (
-                    <button 
+                    <button
                       key={size}
                       onClick={() => setSelectedSize(size)}
                       className={`${selectedSize === size ? 'opacity-100 underline underline-offset-[12px] decoration-2' : 'opacity-20'} hover:opacity-100 transition-all uppercase`}
@@ -162,7 +162,7 @@ const Hero: React.FC = () => {
                 <p className="opacity-20 mb-5 uppercase">Unit Variant</p>
                 <div className="flex gap-8">
                   {currentProduct.colors.map((color, i) => (
-                    <button 
+                    <button
                       key={color}
                       onClick={() => setSelectedColor(i)}
                       className={`${selectedColor === i ? 'opacity-100 border-b-2 border-white' : 'opacity-20'} hover:opacity-100 transition-all uppercase pb-2`}
@@ -181,62 +181,62 @@ const Hero: React.FC = () => {
                 </svg>
               </button>
               <div>
-                <p className="text-[9px] md:text-[11px] tracking-[0.5em] opacity-30 font-black mb-1 uppercase">Price Tier</p>
-                <p className="text-4xl md:text-6xl font-black font-heading tracking-tighter">${currentPrice.toLocaleString()}</p>
+                <p className="text-[8px] md:text-[11px] tracking-[0.5em] opacity-30 font-black mb-1 uppercase">Price Tier</p>
+                <p className="text-3xl md:text-6xl font-black font-heading tracking-tighter">${currentPrice.toLocaleString()}</p>
               </div>
             </div>
           </div>
         </div>
 
         {/* 3D Model Inspector with Zoom/Pan */}
-        <div 
-          key={`media-${currentIndex}`} 
+        <div
+          key={`media-${currentIndex}`}
           className="lg:col-span-5 order-1 lg:order-2 relative opacity-0 scale-90 animate-[heroMediaEntrance_1.4s_cubic-bezier(0.16,1,0.3,1)_forwards] delay-300"
         >
-          <div 
+          <div
             ref={containerRef}
             onMouseMove={handleMouseMove}
             onMouseLeave={handleMouseLeave}
             onClick={() => setIsZoomed(!isZoomed)}
             className="aspect-[3/4] md:aspect-[4/5] bg-neutral-900 rounded-t-[14rem] overflow-hidden glass group cursor-crosshair relative preserve-3d shadow-[0_0_100px_rgba(255,255,255,0.05)] border border-white/5"
-            style={{ 
+            style={{
               perspective: '1500px',
               cursor: isZoomed ? 'zoom-out' : 'zoom-in'
             }}
           >
-            <div 
+            <div
               className="w-full h-full transition-all duration-300 ease-out flex items-center justify-center"
-              style={{ 
+              style={{
                 transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg) scale(${isZoomed ? 2.5 : 1})`,
                 transformOrigin: `${mousePos.x}% ${mousePos.y}%`
               }}
             >
-              <img 
-                src={currentProduct.image} 
-                alt={currentProduct.name} 
+              <img
+                src={currentProduct.image}
+                alt={currentProduct.name}
                 className="w-full h-full object-cover grayscale contrast-125 transition-transform"
               />
             </div>
 
             {/* Technical HUD */}
             <div className="absolute inset-10 flex flex-col justify-between pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
-               <div className="flex justify-between items-start">
-                 <div className="text-[9px] font-black tracking-widest uppercase bg-black/60 px-4 py-1 border border-white/10">
-                    SCAN_ID: E.T-PRTO-V3.1
-                 </div>
-                 <div className="text-[9px] font-black tracking-widest uppercase bg-black/60 px-4 py-1 border border-white/10">
-                    DEPTH_MAP: ACTIVE
-                 </div>
-               </div>
-               
-               <div className="flex justify-between items-end">
-                 <div className="text-[8px] font-black tracking-widest opacity-50 uppercase">
-                   {tilt.x.toFixed(1)}°X / {tilt.y.toFixed(1)}°Y
-                 </div>
-                 <div className="text-[9px] font-black tracking-widest uppercase bg-black/60 px-4 py-1">
-                   {isZoomed ? '[ ZOOM: MAX_LOCK ]' : '[ MODE: 3D_INSPECT ]'}
-                 </div>
-               </div>
+              <div className="flex justify-between items-start">
+                <div className="text-[9px] font-black tracking-widest uppercase bg-black/60 px-4 py-1 border border-white/10">
+                  SCAN_ID: E.T-PRTO-V3.1
+                </div>
+                <div className="text-[9px] font-black tracking-widest uppercase bg-black/60 px-4 py-1 border border-white/10">
+                  DEPTH_MAP: ACTIVE
+                </div>
+              </div>
+
+              <div className="flex justify-between items-end">
+                <div className="text-[8px] font-black tracking-widest opacity-50 uppercase">
+                  {tilt.x.toFixed(1)}°X / {tilt.y.toFixed(1)}°Y
+                </div>
+                <div className="text-[9px] font-black tracking-widest uppercase bg-black/60 px-4 py-1">
+                  {isZoomed ? '[ ZOOM: MAX_LOCK ]' : '[ MODE: 3D_INSPECT ]'}
+                </div>
+              </div>
             </div>
 
             {/* Hint overlay */}
@@ -252,8 +252,8 @@ const Hero: React.FC = () => {
         <div className="hidden lg:col-span-3 lg:flex flex-col gap-12 mb-24 opacity-0 translate-x-12 animate-[heroTextEntrance_1s_cubic-bezier(0.16,1,0.3,1)_forwards] delay-500">
           <div className="flex gap-4">
             {PRODUCTS.slice(1, 3).map((p, i) => (
-              <div 
-                key={p.id} 
+              <div
+                key={p.id}
                 onClick={() => setCurrentIndex((i + 1) % PRODUCTS.length)}
                 className="w-full aspect-[3/4] glass rounded-sm overflow-hidden opacity-20 hover:opacity-100 hover:scale-105 transition-all duration-700 cursor-pointer shadow-2xl border border-white/10"
               >
@@ -264,7 +264,7 @@ const Hero: React.FC = () => {
           <div className="flex justify-between items-center text-[10px] font-black tracking-[0.5em] opacity-30">
             <span>0{currentIndex + 1} // 05</span>
             <div className="flex gap-3">
-              {Array.from({length: 5}).map((_, i) => (
+              {Array.from({ length: 5 }).map((_, i) => (
                 <div key={i} className={`h-1.5 transition-all duration-1000 rounded-full ${currentIndex === i ? 'w-14 bg-white opacity-100 shadow-[0_0_15px_rgba(255,255,255,0.8)]' : 'w-3 bg-white/10'}`} />
               ))}
             </div>

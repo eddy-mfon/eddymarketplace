@@ -19,8 +19,8 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange, onCartOpen, 
   const suggestions = useMemo(() => {
     if (!searchQuery.trim()) return [];
     const query = searchQuery.toLowerCase();
-    return PRODUCTS.filter(p => 
-      p.name.toLowerCase().includes(query) || 
+    return PRODUCTS.filter(p =>
+      p.name.toLowerCase().includes(query) ||
       p.type.toLowerCase().includes(query) ||
       p.category.toLowerCase().includes(query)
     ).slice(0, 5);
@@ -46,26 +46,27 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange, onCartOpen, 
         <div className="flex items-center gap-2 cursor-pointer group" onClick={() => handleNavClick('HOME')}>
           <span className="font-black text-xl md:text-2xl tracking-tighter group-hover:brightness-125 group-hover:scale-105 transition-all duration-300">EDDY TEMPLAR</span>
         </div>
-        
+
         <div className="hidden md:flex items-center gap-12 text-[10px] tracking-[0.3em] font-bold">
-          {NAV_LINKS.map((link) => {
-            const isActive = currentView === link.view;
-            return (
-              <button 
-                key={link.label} 
+          <div className="hidden md:flex items-center gap-10">
+            {NAV_LINKS.map((link) => (
+              <button
+                key={link.label}
                 onClick={() => onViewChange(link.view)}
-                className={`transition-all uppercase hover:tracking-[0.4em] hover:brightness-125 hover:scale-105 ${
-                  isActive ? 'opacity-100 text-white' : 'opacity-40 text-white/70 hover:opacity-80'
-                }`}
+                className={`text-[9.5px] font-black tracking-[0.4em] transition-all hover:tracking-[0.6em] uppercase relative group ${currentView === link.view ? 'text-white' : 'text-white/40'
+                  }`}
               >
                 {link.label}
+                <span className={`absolute -bottom-1 left-0 h-[1px] bg-white transition-all duration-500 ${currentView === link.view ? 'w-full' : 'w-0 group-hover:w-full'}`} />
               </button>
-            );
-          })}
+            ))}
+            <button className="text-[9.5px] font-black tracking-[0.4em] text-white/40 hover:text-white transition-all uppercase">Blogs</button>
+            <button className="text-[9.5px] font-black tracking-[0.4em] text-white/40 hover:text-white transition-all uppercase">FAQs</button>
+          </div>
         </div>
 
         <div className="flex items-center gap-2 md:gap-4">
-          <button 
+          <button
             aria-label="Open search overlay"
             onClick={() => setIsSearchOpen(true)}
             className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center glass border-white/20 hover:border-white/50 transition-all group"
@@ -74,7 +75,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange, onCartOpen, 
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </button>
-          <button 
+          <button
             aria-label="View shopping cart"
             onClick={onCartOpen}
             className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center glass border-white/20 hover:border-white/50 transition-all group relative"
@@ -88,7 +89,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange, onCartOpen, 
               </span>
             )}
           </button>
-          <button 
+          <button
             aria-label="Toggle mobile menu"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             className="md:hidden w-8 h-8 flex items-center justify-center glass border-white/20"
@@ -106,8 +107,8 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange, onCartOpen, 
       <div className={`fixed inset-0 z-[55] bg-black transition-all duration-500 md:hidden ${isMobileMenuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
         <div className="flex flex-col items-center justify-center h-full gap-12 text-2xl font-black tracking-tighter uppercase">
           {NAV_LINKS.map((link) => (
-            <button 
-              key={link.label} 
+            <button
+              key={link.label}
               onClick={() => handleNavClick(link.view)}
               className={`${currentView === link.view ? 'text-white' : 'text-white/40'}`}
             >
@@ -121,31 +122,31 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, onViewChange, onCartOpen, 
       {/* Full-screen Search Overlay */}
       {isSearchOpen && (
         <div className={`fixed inset-0 z-[100] flex flex-col items-center justify-center bg-black/95 backdrop-blur-3xl p-6 transition-all duration-400 ease-in-out ${isExitingSearch ? 'opacity-0 scale-105 pointer-events-none' : 'opacity-100 scale-100 animate-fade-in'}`}>
-          <button 
+          <button
             aria-label="Close search overlay"
             onClick={closeSearch}
             className="absolute top-6 right-6 md:top-10 md:right-10 w-10 h-10 md:w-12 md:h-12 glass rounded-full flex items-center justify-center hover:bg-white hover:text-black transition-all"
           >
             ✕
           </button>
-          
+
           <div className="w-full max-w-3xl">
             <div className="text-[10px] tracking-[1em] font-black opacity-30 mb-8 text-center uppercase">Search Archive</div>
-            <input 
+            <input
               autoFocus
-              type="text" 
+              type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               aria-label="Search items in the archive"
-              placeholder="SEARCH..." 
+              placeholder="SEARCH..."
               className="w-full bg-transparent border-b-2 border-white/20 py-4 md:py-6 text-3xl md:text-6xl font-black font-heading tracking-tighter outline-none focus:border-white transition-colors uppercase"
             />
 
             {suggestions.length > 0 && (
               <div className="mt-8 space-y-4 animate-fade-in">
                 {suggestions.map((product) => (
-                  <div 
-                    key={product.id} 
+                  <div
+                    key={product.id}
                     onClick={() => { handleNavClick('CATALOG'); closeSearch(); }}
                     className="flex items-center justify-between group cursor-pointer border-b border-white/5 pb-4 hover:border-white/20 transition-all"
                   >

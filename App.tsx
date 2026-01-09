@@ -13,9 +13,11 @@ import WaitlistSection from './components/WaitlistSection';
 import AboutPage from './components/AboutPage';
 import { INVENTORY_IMAGES, PRODUCTS, PUFFERS, BOOTS } from './constants';
 import { Product, CartItem } from './types';
+import ProductDetailPage from './components/ProductDetailPage';
 
 function App() {
-  const [currentView, setCurrentView] = useState<'HOME' | 'CATALOG' | 'PUFFERS' | 'BOOTS' | 'ABOUT'>('HOME');
+  const [currentView, setCurrentView] = useState<'HOME' | 'CATALOG' | 'PUFFERS' | 'BOOTS' | 'ABOUT' | 'PRODUCT_DETAIL'>('HOME');
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
@@ -28,6 +30,11 @@ function App() {
       return [...prev, { ...product, quantity: 1 }];
     });
     setIsCartOpen(true);
+  };
+
+  const handleProductClick = (product: Product) => {
+    setSelectedProduct(product);
+    handleViewChange('PRODUCT_DETAIL');
   };
 
   const removeFromCart = (id: string) => {
@@ -48,19 +55,28 @@ function App() {
 
   const renderView = () => {
     switch (currentView) {
+      case 'PRODUCT_DETAIL':
+        return selectedProduct ? (
+          <ProductDetailPage
+            product={selectedProduct}
+            onAddToCart={addToCart}
+            onBack={() => handleViewChange('CATALOG')}
+            onProductClick={handleProductClick}
+          />
+        ) : null;
       case 'CATALOG':
-        return <ShopPage title="Catalog" products={PRODUCTS} onProductClick={addToCart} />;
+        return <ShopPage title="Catalog" products={PRODUCTS} onProductClick={handleProductClick} />;
       case 'PUFFERS':
-        return <ShopPage title="Puffers" products={PUFFERS} onProductClick={addToCart} />;
+        return <ShopPage title="Puffers" products={PUFFERS} onProductClick={handleProductClick} />;
       case 'BOOTS':
-        return <ShopPage title="Boots" products={BOOTS} onProductClick={addToCart} />;
+        return <ShopPage title="Boots" products={BOOTS} onProductClick={handleProductClick} />;
       case 'ABOUT':
         return <AboutPage />;
       default:
         return (
           <>
             <Hero />
-            
+
             <CollectionSection onViewCatalog={() => handleViewChange('CATALOG')} onAddToCart={addToCart} />
 
             {/* LIMITED EDITION DROP */}
@@ -73,14 +89,14 @@ function App() {
               <div className="max-w-7xl mx-auto text-center">
                 <div className="text-[10px] tracking-[0.5em] font-black opacity-30 mb-12 uppercase">[ FIELD REPORTS ]</div>
                 <div className="relative">
-                   <span className="text-[20vw] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-black opacity-[0.03] select-none pointer-events-none">VERIFIED</span>
-                   <p className="text-4xl md:text-7xl font-black font-heading tracking-tighter leading-tight relative z-10 max-w-5xl mx-auto uppercase">
-                     "The most robust gear I've ever worn. Survived the Arctic Ridge with just the Aurora™ shell. Pure technical mastery."
-                   </p>
+                  <span className="text-[20vw] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-black opacity-[0.03] select-none pointer-events-none">VERIFIED</span>
+                  <p className="text-4xl md:text-7xl font-black font-heading tracking-tighter leading-tight relative z-10 max-w-5xl mx-auto uppercase">
+                    "The most robust gear I've ever worn. Survived the Arctic Ridge with just the Aurora™ shell. Pure technical mastery."
+                  </p>
                 </div>
                 <div className="mt-12">
-                   <p className="text-[12px] font-black tracking-[0.4em] uppercase">M. VASQUEZ // EXPEDITION LEAD</p>
-                   <p className="text-[10px] font-bold opacity-40 uppercase tracking-widest mt-2">SECTOR 7 NORTHERN FRONT</p>
+                  <p className="text-[12px] font-black tracking-[0.4em] uppercase">M. VASQUEZ // EXPEDITION LEAD</p>
+                  <p className="text-[10px] font-bold opacity-40 uppercase tracking-widest mt-2">SECTOR 7 NORTHERN FRONT</p>
                 </div>
               </div>
             </section>
@@ -102,7 +118,7 @@ function App() {
                 </div>
               </div>
             </section>
-            
+
             <div className="py-32 px-6 max-w-[1600px] mx-auto overflow-hidden">
               <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8">
                 <div className="animate-fade-in">
@@ -113,7 +129,7 @@ function App() {
                     TEMPLAR OPS<br />RESERVE
                   </h2>
                 </div>
-                <button 
+                <button
                   onClick={() => handleViewChange('CATALOG')}
                   className="group px-10 py-4 border border-white hover:bg-white hover:text-black transition-all uppercase text-[10px] font-black tracking-[0.4em] relative overflow-hidden"
                 >
@@ -121,28 +137,28 @@ function App() {
                   <div className="absolute inset-0 bg-white translate-x-[-100%] group-hover:translate-x-0 transition-transform duration-300" />
                 </button>
               </div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-5 gap-8">
                 {INVENTORY_IMAGES.map((img, i) => (
                   <div key={i} className="group cursor-pointer animate-fade-in" style={{ animationDelay: `${i * 100}ms` }}>
                     <div className="aspect-[3/4] glass rounded-sm overflow-hidden mb-4 relative">
-                        <img 
-                          src={img} 
-                          className="w-full h-full object-cover grayscale opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
-                          alt={`Inventory ${i}`}
-                          onError={(e) => {
-                            e.currentTarget.style.display = 'none';
-                            e.currentTarget.parentElement!.innerHTML = '<div class="et-logo-placeholder w-full h-full opacity-10"></div>';
-                          }}
-                        />
-                        <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
+                      <img
+                        src={img}
+                        className="w-full h-full object-cover grayscale opacity-80 group-hover:opacity-100 group-hover:scale-110 transition-all duration-700"
+                        alt={`Inventory ${i}`}
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                          e.currentTarget.parentElement!.innerHTML = '<div class="et-logo-placeholder w-full h-full opacity-10"></div>';
+                        }}
+                      />
+                      <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
                     <div className="text-[10px] font-bold tracking-widest flex justify-between items-center">
-                        <div>
-                          <p className="opacity-100 group-hover:translate-x-1 transition-transform">TEMPLAR_PRO_0{i + 1}</p>
-                          <p className="opacity-50 text-[8px] uppercase">Archive Series</p>
-                        </div>
-                        <p className="opacity-50 group-hover:opacity-100">$1,249.00</p>
+                      <div>
+                        <p className="opacity-100 group-hover:translate-x-1 transition-transform">TEMPLAR_PRO_0{i + 1}</p>
+                        <p className="opacity-50 text-[8px] uppercase">Archive Series</p>
+                      </div>
+                      <p className="opacity-50 group-hover:opacity-100">$1,249.00</p>
                     </div>
                   </div>
                 ))}
@@ -156,28 +172,28 @@ function App() {
 
             {/* FINAL CTA SECTION */}
             <section className="py-64 px-6 bg-black relative border-t border-white/10 overflow-hidden">
-               <div className="absolute inset-0 opacity-10 pointer-events-none">
-                  <div className="grid grid-cols-6 h-full border-r border-white/5">
-                    {Array.from({length: 6}).map((_, i) => <div key={i} className="border-l border-white/5 h-full"></div>)}
-                  </div>
-               </div>
-               <div className="max-w-4xl mx-auto text-center relative z-10">
-                 <h2 className="text-7xl md:text-[160px] font-black font-heading leading-none tracking-tighter uppercase mb-12">
-                   JOIN THE<br />PROTOCOL
-                 </h2>
-                 <p className="text-xl md:text-2xl font-bold opacity-40 tracking-tight mb-16 max-w-2xl mx-auto uppercase">
-                   Gain access to early drops, technical field guides, and the Eddy Templar restricted archive.
-                 </p>
-                 <div className="flex flex-col md:flex-row items-center justify-center gap-6">
-                    <button className="w-full md:w-auto px-16 py-6 bg-white text-black font-black tracking-[0.5em] uppercase hover:bg-neutral-200 transition-all hover:scale-105 active:scale-95">
-                      Enter Restricted Area
-                    </button>
-                    <button onClick={() => handleViewChange('CATALOG')} className="w-full md:w-auto px-16 py-6 border border-white text-white font-black tracking-[0.5em] uppercase hover:bg-white hover:text-black transition-all hover:scale-105 active:scale-95">
-                      Explore Gear
-                    </button>
-                 </div>
-                 <div className="mt-12 text-[10px] font-bold tracking-[1em] opacity-20 uppercase">No compromise. No limits. No noise.</div>
-               </div>
+              <div className="absolute inset-0 opacity-10 pointer-events-none">
+                <div className="grid grid-cols-6 h-full border-r border-white/5">
+                  {Array.from({ length: 6 }).map((_, i) => <div key={i} className="border-l border-white/5 h-full"></div>)}
+                </div>
+              </div>
+              <div className="max-w-4xl mx-auto text-center relative z-10">
+                <h2 className="text-7xl md:text-[160px] font-black font-heading leading-none tracking-tighter uppercase mb-12">
+                  JOIN THE<br />PROTOCOL
+                </h2>
+                <p className="text-xl md:text-2xl font-bold opacity-40 tracking-tight mb-16 max-w-2xl mx-auto uppercase">
+                  Gain access to early drops, technical field guides, and the Eddy Templar restricted archive.
+                </p>
+                <div className="flex flex-col md:flex-row items-center justify-center gap-6">
+                  <button className="w-full md:w-auto px-16 py-6 bg-white text-black font-black tracking-[0.5em] uppercase hover:bg-neutral-200 transition-all hover:scale-105 active:scale-95">
+                    Enter Restricted Area
+                  </button>
+                  <button onClick={() => handleViewChange('CATALOG')} className="w-full md:w-auto px-16 py-6 border border-white text-white font-black tracking-[0.5em] uppercase hover:bg-white hover:text-black transition-all hover:scale-105 active:scale-95">
+                    Explore Gear
+                  </button>
+                </div>
+                <div className="mt-12 text-[10px] font-bold tracking-[1em] opacity-20 uppercase">No compromise. No limits. No noise.</div>
+              </div>
             </section>
           </>
         );
@@ -191,13 +207,13 @@ function App() {
 
   return (
     <div className="bg-black min-h-screen selection:bg-white selection:text-black">
-      <Navbar 
-        currentView={currentView} 
-        onViewChange={handleViewChange} 
-        onCartOpen={() => setIsCartOpen(true)} 
-        cartCount={cartCount} 
+      <Navbar
+        currentView={currentView}
+        onViewChange={handleViewChange}
+        onCartOpen={() => setIsCartOpen(true)}
+        cartCount={cartCount}
       />
-      
+
       <main className="relative">
         <div key={currentView} className="view-transition-container">
           {renderView()}
@@ -205,13 +221,13 @@ function App() {
       </main>
 
       <Footer />
-      
-      <CartOverlay 
-        isOpen={isCartOpen} 
-        onClose={() => setIsCartOpen(false)} 
-        items={cart} 
-        onRemove={removeFromCart} 
-        onUpdateQuantity={updateQuantity} 
+
+      <CartOverlay
+        isOpen={isCartOpen}
+        onClose={() => setIsCartOpen(false)}
+        items={cart}
+        onRemove={removeFromCart}
+        onUpdateQuantity={updateQuantity}
       />
 
       {/* Decorative floating elements */}
